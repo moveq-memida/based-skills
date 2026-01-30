@@ -10,7 +10,14 @@
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },
-  "keywords": ["ai", "agent", "skills", "nft", "base", "blockchain"],
+  "keywords": [
+    "ai",
+    "agent",
+    "skills",
+    "nft",
+    "base",
+    "blockchain"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -18,7 +25,8 @@
     "@react-router/serve": "^7.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.1.0"
+    "react-router": "^7.1.0",
+    "isbot": "^5"
   },
   "devDependencies": {
     "@react-router/dev": "^7.1.0",
