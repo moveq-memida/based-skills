@@ -1,5 +1,7 @@
 import type { MetaFunction } from "react-router";
 import { useParams } from "react-router";
+import { useAccount, useConnect, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
+import { parseEther } from "viem";
 import { Header } from "../components/Header";
 
 export const meta: MetaFunction = () => {
@@ -38,6 +40,32 @@ What's the forecast?`,
 
 export default function SkillDetail() {
   const { id } = useParams();
+  const { isConnected } = useAccount();
+  const { connectors, connect } = useConnect();
+  const { sendTransaction, data: hash, isPending } = useSendTransaction();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  const handleBuy = () => {
+    if (!isConnected) {
+      // 最初のコネクタで接続
+      const connector = connectors[0];
+      if (connector) connect({ connector });
+      return;
+    }
+    
+    sendTransaction({
+      to: "0x0000000000000000000000000000000000000000", // TODO: 実際のコントラクトアドレス
+      value: parseEther(MOCK_SKILL.price),
+    });
+  };
+
+  const getButtonText = () => {
+    if (!isConnected) return "Connect Wallet";
+    if (isPending) return "Confirm in Wallet...";
+    if (isConfirming) return "Processing...";
+    if (isSuccess) return "Purchased ✓";
+    return "Buy Now";
+  };
 
   return (
     <div>
@@ -63,7 +91,13 @@ export default function SkillDetail() {
             <div className="purchase-price">
               {MOCK_SKILL.price}<span className="purchase-price-currency"> ETH</span>
             </div>
-            <button className="purchase-btn">Buy Now</button>
+            <button 
+              className="purchase-btn" 
+              onClick={handleBuy}
+              disabled={isPending || isConfirming}
+            >
+              {getButtonText()}
+            </button>
             <p className="purchase-note">Instant delivery</p>
           </div>
           
