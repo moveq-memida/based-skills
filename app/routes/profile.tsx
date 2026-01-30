@@ -4,12 +4,9 @@ import { Header } from "../components/Header";
 import { SkillCard, type Skill } from "../components/SkillCard";
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: "Profile - Based Skills" },
-  ];
+  return [{ title: "Profile | Based Skills" }];
 };
 
-// Mock data
 const MOCK_USER = {
   address: "0x1234567890abcdef1234567890abcdef12345678",
   name: "WeatherDAO",
@@ -66,7 +63,7 @@ export default function Profile() {
           <div className="profile-avatar">
             {MOCK_USER.name.charAt(0)}
           </div>
-          <div className="profile-info">
+          <div>
             <h1 className="profile-name">{MOCK_USER.name}</h1>
             <p className="profile-address">{MOCK_USER.address}</p>
             <p className="profile-bio">{MOCK_USER.bio}</p>
@@ -74,28 +71,28 @@ export default function Profile() {
         </div>
 
         <div className="profile-stats">
-          <div className="profile-stat">
-            <span className="stat-value">{MOCK_USER.stats.skills}</span>
-            <span className="stat-label">Skills</span>
+          <div>
+            <div className="profile-stat-value">{MOCK_USER.stats.skills}</div>
+            <div className="profile-stat-label">Skills</div>
           </div>
-          <div className="profile-stat">
-            <span className="stat-value">{MOCK_USER.stats.totalSales}</span>
-            <span className="stat-label">Total Sales</span>
+          <div>
+            <div className="profile-stat-value">{MOCK_USER.stats.totalSales}</div>
+            <div className="profile-stat-label">Total Sales</div>
           </div>
-          <div className="profile-stat">
-            <span className="stat-value">{MOCK_USER.stats.totalEarned} ETH</span>
-            <span className="stat-label">Earned</span>
+          <div>
+            <div className="profile-stat-value">{MOCK_USER.stats.totalEarned} ETH</div>
+            <div className="profile-stat-label">Earned</div>
           </div>
         </div>
 
-        <section className="profile-skills">
-          <h2>Published Skills</h2>
+        <div className="profile-skills">
+          <h2 className="profile-skills-title">Published Skills</h2>
           <div className="skills-grid">
             {USER_SKILLS.map((skill) => (
               <SkillCard key={skill.id} skill={skill} />
             ))}
           </div>
-        </section>
+        </div>
       </main>
     </div>
   );

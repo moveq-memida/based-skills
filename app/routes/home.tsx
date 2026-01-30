@@ -1,100 +1,125 @@
 import type { MetaFunction } from "react-router";
+import { Link } from "react-router";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import styles from "./home.module.css";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Based Skills - AI Agent Skill Marketplace on Base" },
-    { name: "description", content: "Buy, sell, and trade AI agent skills as NFTs on Base blockchain." },
+    { title: "Based Skills | AI Agent Skill Marketplace on Base" },
+    { name: "description", content: "The marketplace for AI agent skills. Buy, sell, and trade skills on Base." },
   ];
 };
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.logo}>BASED SKILLS</div>
-        <nav className={styles.nav}>
-          <a href="/skills">Explore</a>
-          <a href="/submit">Submit</a>
-          <ConnectButton 
-            chainStatus="icon"
-            showBalance={false}
-            accountStatus="address"
-          />
-        </nav>
+    <div className="page">
+      <header className="header">
+        <div className="header-inner">
+          <Link to="/" className="logo">
+            <span className="logo-icon">⚡</span>
+            Based Skills
+          </Link>
+          <nav className="nav">
+            <Link to="/skills" className="nav-link">Explore</Link>
+            <Link to="/submit" className="nav-link">Submit</Link>
+            <ConnectButton 
+              chainStatus="icon"
+              showBalance={false}
+              accountStatus="address"
+            />
+          </nav>
+        </div>
       </header>
 
-      <main className={styles.main}>
-        <section className={styles.hero}>
-          <h1 className={styles.title}>
-            The Marketplace for
+      <main className="main-content">
+        <section className="hero">
+          <div className="hero-badge">
+            <span className="hero-badge-dot"></span>
+            Built on Base
+          </div>
+          <h1 className="hero-title">
+            <span className="hero-title-gradient">Skills for</span>
             <br />
-            <span className={styles.highlight}>AI Agent Skills</span>
+            AI Agents
           </h1>
-          <p className={styles.subtitle}>
-            Buy, sell, and trade skills as NFTs on Base.
-            <br />
-            Give your agent new abilities.
+          <p className="hero-description">
+            The marketplace for AI agent skills. 
+            Create, share, and monetize capabilities that make agents smarter.
           </p>
-          <div className={styles.heroActions}>
-            <a href="/skills" className={styles.primaryButton}>
-              Explore Skills
-            </a>
-            <a href="/submit" className={styles.secondaryButton}>
-              List Your Skill
-            </a>
+          <div className="hero-actions">
+            <Link to="/skills" className="btn btn-primary">
+              Explore Skills →
+            </Link>
+            <Link to="/submit" className="btn btn-secondary">
+              Submit Skill
+            </Link>
           </div>
         </section>
 
-        <section className={styles.stats}>
-          <div className={styles.stat}>
-            <span className={styles.statValue}>0</span>
-            <span className={styles.statLabel}>Skills Listed</span>
+        <div className="container">
+          <div className="stats">
+            <div className="stat">
+              <div className="stat-value">0</div>
+              <div className="stat-label">Skills Listed</div>
+            </div>
+            <div className="stat">
+              <div className="stat-value">$0</div>
+              <div className="stat-label">Total Volume</div>
+            </div>
+            <div className="stat">
+              <div className="stat-value">0</div>
+              <div className="stat-label">Creators</div>
+            </div>
           </div>
-          <div className={styles.stat}>
-            <span className={styles.statValue}>0</span>
-            <span className={styles.statLabel}>Total Sales</span>
+        </div>
+
+        <section className="section">
+          <div className="section-header">
+            <h2 className="section-title">How it works</h2>
+            <p className="section-description">
+              Three steps to supercharge your agent
+            </p>
           </div>
-          <div className={styles.stat}>
-            <span className={styles.statValue}>0</span>
-            <span className={styles.statLabel}>Creators</span>
+          <div className="features">
+            <div className="feature-card">
+              <div className="feature-icon">📝</div>
+              <h3 className="feature-title">Create</h3>
+              <p className="feature-description">
+                Build a skill using the SKILL.md format. Define capabilities, instructions, and examples.
+              </p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">🔗</div>
+              <h3 className="feature-title">Mint</h3>
+              <p className="feature-description">
+                Publish your skill as an NFT on Base. Set your price and royalties.
+              </p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">💰</div>
+              <h3 className="feature-title">Earn</h3>
+              <p className="feature-description">
+                Get paid when others use your skill. Earn royalties on every resale.
+              </p>
+            </div>
           </div>
         </section>
 
-        <section className={styles.featured}>
-          <h2 className={styles.sectionTitle}>Featured Skills</h2>
-          <div className={styles.skillGrid}>
-            <div className={styles.emptyState}>
-              No skills listed yet. Be the first to list!
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.howItWorks}>
-          <h2 className={styles.sectionTitle}>How It Works</h2>
-          <div className={styles.steps}>
-            <div className={styles.step}>
-              <div className={styles.stepNumber}>1</div>
-              <h3>Create</h3>
-              <p>Build a skill for AI agents using SKILL.md format</p>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNumber}>2</div>
-              <h3>Mint</h3>
-              <p>Upload and mint your skill as an NFT on Base</p>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNumber}>3</div>
-              <h3>Earn</h3>
-              <p>Get paid when others buy your skill. Earn royalties on resales.</p>
-            </div>
+        <section className="cta">
+          <h2 className="cta-title">
+            <span className="cta-title-dim">Just</span> build it.
+          </h2>
+          <div className="hero-actions">
+            <Link to="/submit" className="btn btn-primary">
+              Submit Your Skill →
+            </Link>
           </div>
         </section>
       </main>
 
-      <footer className={styles.footer}>
-        <p>Built on Base</p>
+      <footer className="footer">
+        <p className="footer-text">
+          Built on <a href="https://base.org" className="footer-link" target="_blank" rel="noopener">Base</a>
+        </p>
       </footer>
     </div>
   );

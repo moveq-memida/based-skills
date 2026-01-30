@@ -4,12 +4,11 @@ import { SkillCard, type Skill } from "../components/SkillCard";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Explore Skills - Based Skills" },
-    { name: "description", content: "Browse and discover AI agent skills on Base." },
+    { title: "Explore Skills | Based Skills" },
+    { name: "description", content: "Discover AI agent skills on Base." },
   ];
 };
 
-// Mock data for now
 const MOCK_SKILLS: Skill[] = [
   {
     id: "1",
@@ -34,7 +33,7 @@ const MOCK_SKILLS: Skill[] = [
   {
     id: "3",
     name: "Image Generator",
-    description: "Generate images from text prompts using AI models.",
+    description: "Generate images from text prompts using cutting-edge AI models.",
     category: "Creative",
     price: "0.01",
     creator: "0x9876...5432",
@@ -44,7 +43,7 @@ const MOCK_SKILLS: Skill[] = [
   {
     id: "4",
     name: "Twitter Bot",
-    description: "Automate Twitter interactions, posting, and engagement.",
+    description: "Automate Twitter interactions, posting, and engagement analytics.",
     category: "Social",
     price: "0.002",
     creator: "0xfedc...ba98",
@@ -54,7 +53,7 @@ const MOCK_SKILLS: Skill[] = [
   {
     id: "5",
     name: "Calendar Manager",
-    description: "Manage calendar events, scheduling, and reminders.",
+    description: "Manage calendar events, scheduling, and smart reminders.",
     category: "Productivity",
     price: "0.003",
     creator: "0x1111...2222",
@@ -64,7 +63,7 @@ const MOCK_SKILLS: Skill[] = [
   {
     id: "6",
     name: "Translation",
-    description: "Real-time translation between 50+ languages.",
+    description: "Real-time translation between 50+ languages with context awareness.",
     category: "Utility",
     price: "0.002",
     creator: "0x3333...4444",
@@ -80,31 +79,28 @@ export default function Skills() {
     <div className="page">
       <Header />
       <main className="main-content">
-        <div className="skills-header">
-          <h1>Explore Skills</h1>
-          <p>Discover skills to enhance your AI agent</p>
+        <div className="page-header">
+          <h1 className="page-title">Explore Skills</h1>
+          <p className="page-description">Discover capabilities for your AI agent</p>
         </div>
 
-        <div className="skills-filters">
-          <div className="category-tabs">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                className={`category-tab ${cat === "All" ? "active" : ""}`}
-              >
-                {cat}
-              </button>
+        <div className="filters">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              className={`filter-btn ${cat === "All" ? "active" : ""}`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="container">
+          <div className="skills-grid">
+            {MOCK_SKILLS.map((skill) => (
+              <SkillCard key={skill.id} skill={skill} />
             ))}
           </div>
-          <div className="search-box">
-            <input type="text" placeholder="Search skills..." />
-          </div>
-        </div>
-
-        <div className="skills-grid">
-          {MOCK_SKILLS.map((skill) => (
-            <SkillCard key={skill.id} skill={skill} />
-          ))}
         </div>
       </main>
     </div>
