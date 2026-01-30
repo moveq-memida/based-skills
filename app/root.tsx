@@ -6,6 +6,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 import type { LinksFunction } from "react-router";
+import { Providers } from "./components/Providers";
 import "./styles/global.css";
 
 export const links: LinksFunction = () => [
@@ -22,7 +23,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <Providers>{children}</Providers>
         <ScrollRestoration />
         <Scripts />
       </body>

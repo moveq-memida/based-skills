@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export function Header() {
   return (
@@ -7,7 +8,11 @@ export function Header() {
       <nav className="nav">
         <Link to="/skills">Explore</Link>
         <Link to="/submit">Submit</Link>
-        <button className="connect-button">Connect Wallet</button>
+        <ConnectButton 
+          chainStatus="icon"
+          showBalance={false}
+          accountStatus="address"
+        />
       </nav>
     </header>
   );

@@ -1,4 +1,5 @@
 import type { MetaFunction } from "react-router";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import styles from "./home.module.css";
 
 export const meta: MetaFunction = () => {
@@ -16,7 +17,11 @@ export default function Home() {
         <nav className={styles.nav}>
           <a href="/skills">Explore</a>
           <a href="/submit">Submit</a>
-          <button className={styles.connectButton}>Connect Wallet</button>
+          <ConnectButton 
+            chainStatus="icon"
+            showBalance={false}
+            accountStatus="address"
+          />
         </nav>
       </header>
 
