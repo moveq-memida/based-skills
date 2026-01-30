@@ -78,8 +78,8 @@ export default function Skills() {
     <div className="page-skills">
       <Header />
       <div className="skills-header">
-        <h1>Skills</h1>
-        <p>Browse available skills for your agent</p>
+        <h1><span>ALL</span><span>SKILLS</span></h1>
+        <p>BROWSE / DISCOVER / ACQUIRE</p>
       </div>
       
       <div className="skills-filters">
