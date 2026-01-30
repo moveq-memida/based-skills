@@ -31,7 +31,7 @@ export default function Home() {
 
   useEffect(() => {
     const tick = () => setTime(t => t + 1);
-    const id = setInterval(tick, 50);
+    const id = setInterval(tick, 100);
     return () => clearInterval(id);
   }, []);
 
@@ -63,18 +63,7 @@ export default function Home() {
   if (!entered) {
     return (
       <div className="gate" onClick={() => setEntered(true)}>
-        <div className="gate-grid">
-          {Array.from({ length: 100 }).map((_, i) => (
-            <div 
-              key={i} 
-              className="gate-cell"
-              style={{
-                opacity: Math.random() > 0.7 ? 1 : 0.1,
-                animationDelay: `${Math.random() * 2}s`,
-              }}
-            />
-          ))}
-        </div>
+        <div className="gate-grid" />
         <div className="gate-content">
           <div 
             className="gate-title"
@@ -90,10 +79,6 @@ export default function Home() {
           </div>
           <div className="gate-sub">SKILLS</div>
         </div>
-        <div 
-          className="gate-cursor"
-          style={{ left: mouse.x, top: mouse.y }}
-        />
         <div className="gate-hint">[ ENTER ]</div>
       </div>
     );
