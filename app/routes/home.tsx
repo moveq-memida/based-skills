@@ -6,153 +6,115 @@ import { motion } from "framer-motion";
 export const meta: MetaFunction = () => {
   return [
     { title: "Based Skills" },
-    { name: "description", content: "Skills for AI agents on Base." },
+    { name: "description", content: "Skills for AI agents." },
   ];
 };
 
 export default function Home() {
   return (
-    <>
-      <div className="noise" />
-      
-      <nav className="topnav">
-        <Link to="/" className="wordmark">Based Skills</Link>
-        <div className="topnav-right">
-          <Link to="/skills">Skills</Link>
-          <Link to="/submit">Submit</Link>
+    <div className="home">
+      <header className="home-nav">
+        <Link to="/" className="home-logo">Based Skills</Link>
+        <div className="home-nav-right">
+          <Link to="/skills" className="home-nav-link">Skills</Link>
+          <Link to="/submit" className="home-nav-link">Submit</Link>
           <ConnectButton chainStatus="none" showBalance={false} accountStatus="avatar" />
         </div>
-      </nav>
+      </header>
 
-      <main>
-        <section className="intro">
-          <motion.div 
-            className="intro-text"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.2 }}
-          >
-            <h1>
-              <span className="line1">SKILLS</span>
-              <span className="line2">FOR</span>
-              <span className="line3">AGENTS</span>
-            </h1>
-          </motion.div>
-          
-          <motion.p 
-            className="tagline"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-          >
-            Create. Trade. Earn.
-          </motion.p>
+      <section className="home-hero">
+        <motion.h1
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          Skills
+          <br />
+          <span className="home-hero-accent">for agents</span>
+        </motion.h1>
+        
+        <motion.p 
+          className="home-hero-sub"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        >
+          Build. Trade. Earn.
+        </motion.p>
+        
+        <motion.div 
+          className="home-hero-cta"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          <Link to="/skills" className="home-btn-primary">
+            Explore
+          </Link>
+          <Link to="/submit" className="home-btn-ghost">
+            Submit skill
+          </Link>
+        </motion.div>
+      </section>
 
-          <motion.div 
-            className="intro-cta"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-          >
-            <Link to="/skills" className="cta-link">
-              <span>Enter</span>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </Link>
-          </motion.div>
-        </section>
+      <section className="home-scroll-text">
+        <div className="home-scroll-track">
+          <span>UTILITY • DEVELOPER • CREATIVE • SOCIAL • DEFI • NFT • GAMING • </span>
+          <span>UTILITY • DEVELOPER • CREATIVE • SOCIAL • DEFI • NFT • GAMING • </span>
+        </div>
+      </section>
 
-        <section className="marquee-section">
-          <div className="marquee">
-            <div className="marquee-content">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <span key={i}>WEATHER • CODE REVIEW • TRANSLATION • IMAGE GEN • CALENDAR • SOCIAL • DeFi • NFT • </span>
-              ))}
-            </div>
-          </div>
-        </section>
+      <section className="home-features">
+        <div className="home-feature">
+          <span className="home-feature-num">01</span>
+          <h2>Create</h2>
+          <p>Build skills with SKILL.md. Simple format, infinite possibilities.</p>
+        </div>
+        <div className="home-feature">
+          <span className="home-feature-num">02</span>
+          <h2>Mint</h2>
+          <p>Own your skills onchain. Set your price, keep your rights.</p>
+        </div>
+        <div className="home-feature">
+          <span className="home-feature-num">03</span>
+          <h2>Earn</h2>
+          <p>Get paid on every sale. Royalties on every resale.</p>
+        </div>
+      </section>
 
-        <section className="bento">
-          <motion.div 
-            className="bento-card bento-main"
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <span className="bento-label">01</span>
-            <h2>Build skills<br/>your way</h2>
-            <p>Simple SKILL.md format. Drop it in, your agent learns it.</p>
-          </motion.div>
-          
-          <motion.div 
-            className="bento-card bento-side"
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-          >
-            <span className="bento-label">02</span>
-            <h3>Mint on Base</h3>
-            <p>Own it onchain.</p>
-          </motion.div>
-          
-          <motion.div 
-            className="bento-card bento-side"
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="bento-label">03</span>
-            <h3>Earn forever</h3>
-            <p>Royalties on every resale.</p>
-          </motion.div>
-        </section>
+      <section className="home-stats">
+        <div className="home-stat">
+          <span className="home-stat-num">000</span>
+          <span className="home-stat-label">skills</span>
+        </div>
+        <div className="home-stat">
+          <span className="home-stat-num">$0</span>
+          <span className="home-stat-label">volume</span>
+        </div>
+        <div className="home-stat">
+          <span className="home-stat-num">000</span>
+          <span className="home-stat-label">creators</span>
+        </div>
+      </section>
 
-        <section className="numbers">
-          <div className="number-item">
-            <span className="number-value">000</span>
-            <span className="number-label">skills</span>
-          </div>
-          <div className="number-item">
-            <span className="number-value">$0</span>
-            <span className="number-label">volume</span>
-          </div>
-          <div className="number-item">
-            <span className="number-value">000</span>
-            <span className="number-label">creators</span>
-          </div>
-        </section>
+      <section className="home-cta-final">
+        <motion.h2
+          initial={{ opacity: 0.2 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          Make something.
+        </motion.h2>
+        <Link to="/submit" className="home-btn-primary">
+          Start building →
+        </Link>
+      </section>
 
-        <section className="final">
-          <h2>
-            <motion.span
-              initial={{ opacity: 0.3 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-            >
-              Just
-            </motion.span>
-            {" "}
-            <motion.span
-              className="highlight"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              build
-            </motion.span>
-          </h2>
-          <Link to="/submit" className="final-cta">Submit a skill →</Link>
-        </section>
-      </main>
-
-      <footer className="bottomfooter">
+      <footer className="home-footer">
+        <span>© 2026</span>
         <span>Built on Base</span>
-        <span>2026</span>
       </footer>
-    </>
+    </div>
   );
 }
