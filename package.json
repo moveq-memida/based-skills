@@ -8,7 +8,9 @@
     "build": "react-router build",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "deploy": "npm run build && wrangler pages deploy ./build/client",
+    "pages:dev": "wrangler pages dev ./build/client"
   },
   "keywords": [
     "ai",
@@ -33,10 +35,12 @@
     "wagmi": "^3.4.1"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260130.0",
     "@react-router/dev": "^7.1.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.7.0",
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "wrangler": "^4.61.1"
   }
 }
