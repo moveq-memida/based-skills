@@ -1,102 +1,132 @@
 "use client";
 
-import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Points, PointMaterial } from "@react-three/drei";
-import * as THREE from "three";
-
-function ParticleField() {
-  const ref = useRef<THREE.Points>(null);
-  
-  const particles = useMemo(() => {
-    const count = 2000;
-    const positions = new Float32Array(count * 3);
-    
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 20;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
-    }
-    
-    return positions;
-  }, []);
-
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.rotation.x = state.clock.elapsedTime * 0.02;
-      ref.current.rotation.y = state.clock.elapsedTime * 0.03;
-    }
-  });
-
-  return (
-    <Points ref={ref} positions={particles} stride={3} frustumCulled={false}>
-      <PointMaterial
-        transparent
-        color="#0052ff"
-        size={0.02}
-        sizeAttenuation={true}
-        depthWrite={false}
-        opacity={0.6}
-      />
-    </Points>
-  );
-}
-
-function FloatingOrb({ position, color, speed }: { position: [number, number, number]; color: string; speed: number }) {
-  const ref = useRef<THREE.Mesh>(null);
-  
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * speed) * 0.5;
-      ref.current.position.x = position[0] + Math.cos(state.clock.elapsedTime * speed * 0.7) * 0.3;
-    }
-  });
-
-  return (
-    <mesh ref={ref} position={position}>
-      <sphereGeometry args={[0.3, 32, 32]} />
-      <meshBasicMaterial color={color} transparent opacity={0.15} />
-    </mesh>
-  );
-}
-
-function GlowRing() {
-  const ref = useRef<THREE.Mesh>(null);
-  
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.rotation.x = Math.PI / 2 + Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
-      ref.current.rotation.z = state.clock.elapsedTime * 0.1;
-    }
-  });
-
-  return (
-    <mesh ref={ref} position={[0, 0, -5]}>
-      <torusGeometry args={[3, 0.02, 16, 100]} />
-      <meshBasicMaterial color="#0052ff" transparent opacity={0.3} />
-    </mesh>
-  );
-}
+import { useEffect, useState } from "react";
 
 export function Background3D() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
-    <div style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      zIndex: -1,
-      background: "radial-gradient(ellipse at 50% 0%, rgba(0, 40, 100, 0.3) 0%, #000 70%)",
-    }}>
-      <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
-        <ambientLight intensity={0.5} />
-        <ParticleField />
-        <GlowRing />
-        <FloatingOrb position={[-3, 2, -2]} color="#0052ff" speed={0.8} />
-        <FloatingOrb position={[3, -1, -3]} color="#8b5cf6" speed={1.2} />
-        <FloatingOrb position={[0, 3, -4]} color="#0052ff" speed={0.5} />
-      </Canvas>
+    <div className="bg-container">
+      <div className="bg-gradient" />
+      <div className="bg-grid" />
+      <div className="bg-orb bg-orb-1" />
+      <div className="bg-orb bg-orb-2" />
+      <div className="bg-orb bg-orb-3" />
+      <div className="bg-particles">
+        {Array.from({ length: 50 }).map((_, i) => (
+          <div
+            key={i}
+            className="bg-particle"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${3 + Math.random() * 4}s`,
+            }}
+          />
+        ))}
+      </div>
+      <style>{`
+        .bg-container {
+          position: fixed;
+          inset: 0;
+          z-index: -1;
+          overflow: hidden;
+          background: #000;
+        }
+        
+        .bg-gradient {
+          position: absolute;
+          top: -50%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 150%;
+          height: 100%;
+          background: radial-gradient(ellipse at center, rgba(0, 82, 255, 0.15) 0%, transparent 60%);
+          animation: pulse-glow 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+          50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+        }
+        
+        .bg-grid {
+          position: absolute;
+          inset: 0;
+          background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+          background-size: 60px 60px;
+          mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 70%);
+        }
+        
+        .bg-orb {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          animation: float 20s ease-in-out infinite;
+        }
+        
+        .bg-orb-1 {
+          width: 600px;
+          height: 600px;
+          background: rgba(0, 82, 255, 0.3);
+          top: -20%;
+          left: -10%;
+          animation-delay: 0s;
+        }
+        
+        .bg-orb-2 {
+          width: 400px;
+          height: 400px;
+          background: rgba(139, 92, 246, 0.2);
+          top: 40%;
+          right: -10%;
+          animation-delay: -7s;
+        }
+        
+        .bg-orb-3 {
+          width: 300px;
+          height: 300px;
+          background: rgba(0, 82, 255, 0.2);
+          bottom: -10%;
+          left: 30%;
+          animation-delay: -14s;
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          25% { transform: translate(30px, -30px) rotate(5deg); }
+          50% { transform: translate(-20px, 20px) rotate(-5deg); }
+          75% { transform: translate(20px, 30px) rotate(3deg); }
+        }
+        
+        .bg-particles {
+          position: absolute;
+          inset: 0;
+        }
+        
+        .bg-particle {
+          position: absolute;
+          width: 2px;
+          height: 2px;
+          background: rgba(0, 82, 255, 0.6);
+          border-radius: 50%;
+          animation: twinkle 3s ease-in-out infinite;
+        }
+        
+        @keyframes twinkle {
+          0%, 100% { opacity: 0; transform: scale(0); }
+          50% { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
     </div>
   );
 }
