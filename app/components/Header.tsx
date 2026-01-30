@@ -5,18 +5,11 @@ export function Header() {
   return (
     <header className="header">
       <div className="header-inner">
-        <Link to="/" className="logo">
-          <span className="logo-icon">⚡</span>
-          Based Skills
-        </Link>
+        <Link to="/" className="logo">Based Skills</Link>
         <nav className="nav">
-          <Link to="/skills" className="nav-link">Explore</Link>
+          <Link to="/skills" className="nav-link">Skills</Link>
           <Link to="/submit" className="nav-link">Submit</Link>
-          <ConnectButton 
-            chainStatus="icon"
-            showBalance={false}
-            accountStatus="address"
-          />
+          <ConnectButton chainStatus="none" showBalance={false} accountStatus="avatar" />
         </nav>
       </div>
     </header>

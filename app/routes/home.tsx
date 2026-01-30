@@ -2,237 +2,157 @@ import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
-import { Background3D } from "../components/Background3D";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Based Skills | AI Agent Skill Marketplace on Base" },
-    { name: "description", content: "The marketplace for AI agent skills. Buy, sell, and trade skills on Base." },
+    { title: "Based Skills" },
+    { name: "description", content: "Skills for AI agents on Base." },
   ];
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.1, duration: 0.6, ease: [0.25, 0.4, 0.25, 1] },
-  }),
-};
-
-const stagger = {
-  visible: { transition: { staggerChildren: 0.1 } },
 };
 
 export default function Home() {
   return (
-    <div className="page">
-      <Background3D />
+    <>
+      <div className="noise" />
       
-      <motion.header 
-        className="header"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="header-inner">
-          <Link to="/" className="logo">
-            <motion.span 
-              className="logo-icon"
-              whileHover={{ scale: 1.1, rotate: 10 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              ⚡
-            </motion.span>
-            Based Skills
-          </Link>
-          <nav className="nav">
-            <Link to="/skills" className="nav-link">Explore</Link>
-            <Link to="/submit" className="nav-link">Submit</Link>
-            <ConnectButton 
-              chainStatus="icon"
-              showBalance={false}
-              accountStatus="address"
-            />
-          </nav>
+      <nav className="topnav">
+        <Link to="/" className="wordmark">Based Skills</Link>
+        <div className="topnav-right">
+          <Link to="/skills">Skills</Link>
+          <Link to="/submit">Submit</Link>
+          <ConnectButton chainStatus="none" showBalance={false} accountStatus="avatar" />
         </div>
-      </motion.header>
+      </nav>
 
-      <main className="main-content">
-        <section className="hero">
+      <main>
+        <section className="intro">
           <motion.div 
-            className="hero-badge"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+            className="intro-text"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2 }}
           >
-            <span className="hero-badge-dot"></span>
-            Built on Base
+            <h1>
+              <span className="line1">SKILLS</span>
+              <span className="line2">FOR</span>
+              <span className="line3">AGENTS</span>
+            </h1>
           </motion.div>
-          
-          <motion.h1 
-            className="hero-title"
-            initial="hidden"
-            animate="visible"
-            variants={stagger}
-          >
-            <motion.span className="hero-title-gradient" variants={fadeUp} custom={0}>
-              Skills for
-            </motion.span>
-            <br />
-            <motion.span variants={fadeUp} custom={1}>
-              AI Agents
-            </motion.span>
-          </motion.h1>
           
           <motion.p 
-            className="hero-description"
+            className="tagline"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
           >
-            The marketplace for AI agent skills. 
-            Create, share, and monetize capabilities that make agents smarter.
+            Create. Trade. Earn.
           </motion.p>
-          
+
           <motion.div 
-            className="hero-actions"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
+            className="intro-cta"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
           >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link to="/skills" className="btn btn-primary">
-                Explore Skills →
-              </Link>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link to="/submit" className="btn btn-secondary">
-                Submit Skill
-              </Link>
-            </motion.div>
+            <Link to="/skills" className="cta-link">
+              <span>Enter</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </Link>
           </motion.div>
         </section>
 
-        <motion.div 
-          className="container"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="stats">
-            {[
-              { value: "0", label: "Skills Listed" },
-              { value: "$0", label: "Total Volume" },
-              { value: "0", label: "Creators" },
-            ].map((stat, i) => (
-              <motion.div 
-                key={stat.label}
-                className="stat"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-              >
-                <div className="stat-value">{stat.value}</div>
-                <div className="stat-label">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        <section className="section">
-          <motion.div 
-            className="section-header"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="section-title">How it works</h2>
-            <p className="section-description">
-              Three steps to supercharge your agent
-            </p>
-          </motion.div>
-          
-          <div className="features">
-            {[
-              { icon: "📝", title: "Create", desc: "Build a skill using the SKILL.md format. Define capabilities, instructions, and examples." },
-              { icon: "🔗", title: "Mint", desc: "Publish your skill as an NFT on Base. Set your price and royalties." },
-              { icon: "💰", title: "Earn", desc: "Get paid when others use your skill. Earn royalties on every resale." },
-            ].map((feature, i) => (
-              <motion.div
-                key={feature.title}
-                className="feature-card"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.5 }}
-                whileHover={{ 
-                  y: -8, 
-                  boxShadow: "0 20px 40px rgba(0, 82, 255, 0.2)",
-                  borderColor: "rgba(0, 82, 255, 0.3)",
-                }}
-              >
-                <motion.div 
-                  className="feature-icon"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                >
-                  {feature.icon}
-                </motion.div>
-                <h3 className="feature-title">{feature.title}</h3>
-                <p className="feature-description">{feature.desc}</p>
-              </motion.div>
-            ))}
+        <section className="marquee-section">
+          <div className="marquee">
+            <div className="marquee-content">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <span key={i}>WEATHER • CODE REVIEW • TRANSLATION • IMAGE GEN • CALENDAR • SOCIAL • DeFi • NFT • </span>
+              ))}
+            </div>
           </div>
         </section>
 
-        <motion.section 
-          className="cta"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.h2 
-            className="cta-title"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+        <section className="bento">
+          <motion.div 
+            className="bento-card bento-main"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
           >
-            <span className="cta-title-dim">Just</span>{" "}
+            <span className="bento-label">01</span>
+            <h2>Build skills<br/>your way</h2>
+            <p>Simple SKILL.md format. Drop it in, your agent learns it.</p>
+          </motion.div>
+          
+          <motion.div 
+            className="bento-card bento-side"
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+          >
+            <span className="bento-label">02</span>
+            <h3>Mint on Base</h3>
+            <p>Own it onchain.</p>
+          </motion.div>
+          
+          <motion.div 
+            className="bento-card bento-side"
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <span className="bento-label">03</span>
+            <h3>Earn forever</h3>
+            <p>Royalties on every resale.</p>
+          </motion.div>
+        </section>
+
+        <section className="numbers">
+          <div className="number-item">
+            <span className="number-value">000</span>
+            <span className="number-label">skills</span>
+          </div>
+          <div className="number-item">
+            <span className="number-value">$0</span>
+            <span className="number-label">volume</span>
+          </div>
+          <div className="number-item">
+            <span className="number-value">000</span>
+            <span className="number-label">creators</span>
+          </div>
+        </section>
+
+        <section className="final">
+          <h2>
             <motion.span
+              initial={{ opacity: 0.3 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              Just
+            </motion.span>
+            {" "}
+            <motion.span
+              className="highlight"
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.3, duration: 0.6 }}
+              transition={{ delay: 0.2 }}
             >
-              build it.
+              build
             </motion.span>
-          </motion.h2>
-          <motion.div 
-            className="hero-actions"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link to="/submit" className="btn btn-primary">
-                Submit Your Skill →
-              </Link>
-            </motion.div>
-          </motion.div>
-        </motion.section>
+          </h2>
+          <Link to="/submit" className="final-cta">Submit a skill →</Link>
+        </section>
       </main>
 
-      <footer className="footer">
-        <p className="footer-text">
-          Built on <a href="https://base.org" className="footer-link" target="_blank" rel="noopener">Base</a>
-        </p>
+      <footer className="bottomfooter">
+        <span>Built on Base</span>
+        <span>2026</span>
       </footer>
-    </div>
+    </>
   );
 }

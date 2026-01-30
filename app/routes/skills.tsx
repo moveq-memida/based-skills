@@ -4,8 +4,7 @@ import { SkillCard, type Skill } from "../components/SkillCard";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Explore Skills | Based Skills" },
-    { name: "description", content: "Discover AI agent skills on Base." },
+    { title: "Skills | Based Skills" },
   ];
 };
 
@@ -43,7 +42,7 @@ const MOCK_SKILLS: Skill[] = [
   {
     id: "4",
     name: "Twitter Bot",
-    description: "Automate Twitter interactions, posting, and engagement analytics.",
+    description: "Automate Twitter interactions, posting, and engagement.",
     category: "Social",
     price: "0.002",
     creator: "0xfedc...ba98",
@@ -63,7 +62,7 @@ const MOCK_SKILLS: Skill[] = [
   {
     id: "6",
     name: "Translation",
-    description: "Real-time translation between 50+ languages with context awareness.",
+    description: "Real-time translation between 50+ languages.",
     category: "Utility",
     price: "0.002",
     creator: "0x3333...4444",
@@ -72,37 +71,30 @@ const MOCK_SKILLS: Skill[] = [
   },
 ];
 
-const CATEGORIES = ["All", "Utility", "Developer", "Creative", "Social", "Productivity"];
+const CATEGORIES = ["All", "Utility", "Developer", "Creative", "Social"];
 
 export default function Skills() {
   return (
-    <div className="page">
+    <div className="page-skills">
       <Header />
-      <main className="main-content">
-        <div className="page-header">
-          <h1 className="page-title">Explore Skills</h1>
-          <p className="page-description">Discover capabilities for your AI agent</p>
-        </div>
-
-        <div className="filters">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              className={`filter-btn ${cat === "All" ? "active" : ""}`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        <div className="container">
-          <div className="skills-grid">
-            {MOCK_SKILLS.map((skill) => (
-              <SkillCard key={skill.id} skill={skill} />
-            ))}
-          </div>
-        </div>
-      </main>
+      <div className="skills-header">
+        <h1>Skills</h1>
+        <p>Browse available skills for your agent</p>
+      </div>
+      
+      <div className="skills-filters">
+        {CATEGORIES.map((cat) => (
+          <button key={cat} className={`filter-btn ${cat === "All" ? "active" : ""}`}>
+            {cat}
+          </button>
+        ))}
+      </div>
+      
+      <div className="skills-grid">
+        {MOCK_SKILLS.map((skill) => (
+          <SkillCard key={skill.id} skill={skill} />
+        ))}
+      </div>
     </div>
   );
 }
