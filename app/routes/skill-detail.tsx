@@ -1,7 +1,7 @@
 import type { MetaFunction } from "react-router";
 import { useParams } from "react-router";
-import { useAccount, useConnect, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { parseEther } from "viem";
+import { useAccount, useConnect, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
+import { parseEther, formatEther } from "viem";
 import { Header } from "../components/Header";
 import { BASED_SKILLS_ADDRESS, BASED_SKILLS_ABI } from "../contracts";
 
@@ -9,44 +9,55 @@ export const meta: MetaFunction = () => {
   return [{ title: "Skill | Based Skills" }];
 };
 
-const MOCK_SKILL = {
-  id: "1",
-  tokenId: 0n, // コントラクト上のトークンID
-  name: "Weather Skill",
-  description: "Get current weather and forecasts for any location worldwide. Supports multiple providers.",
-  longDescription: `## Overview
-
-Real-time weather data and forecasts for any location.
-
-## Features
-
-• Current conditions
-• 7-day forecasts
-• Weather alerts
-• Multiple units
-
-## Usage
-
-Get weather for [location]
-What's the forecast?`,
-  category: "Utility",
-  price: "0.001",
-  creatorName: "WeatherDAO",
-  downloads: 156,
-  verified: true,
-  version: "1.2.0",
-  lastUpdated: "2026-01-15",
-  license: "MIT",
-  tags: ["weather", "forecast", "api"],
-};
-
 export default function SkillDetail() {
   const { id } = useParams();
-  const { isConnected } = useAccount();
-  const { connectors, connect } = useConnect();
+  const tokenId = BigInt(id || "0");
   
-  const { writeContract, data: hash, isPending } = useWriteContract();
+  const { address, isConnected } = useAccount();
+  const { connectors, connect } = useConnect();
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  // Fetch skill data from contract
+  const { data: skillData } = useReadContract({
+    address: BASED_SKILLS_ADDRESS,
+    abi: BASED_SKILLS_ABI,
+    functionName: "getSkill",
+    args: [tokenId],
+  });
+
+  const { data: owner } = useReadContract({
+    address: BASED_SKILLS_ADDRESS,
+    abi: BASED_SKILLS_ABI,
+    functionName: "ownerOf",
+    args: [tokenId],
+  });
+
+  const { data: tokenURI } = useReadContract({
+    address: BASED_SKILLS_ADDRESS,
+    abi: BASED_SKILLS_ABI,
+    functionName: "tokenURI",
+    args: [tokenId],
+  });
+
+  // Parse metadata
+  let name = `Skill #${id}`;
+  let description = "";
+  
+  if (tokenURI && typeof tokenURI === "string" && tokenURI.startsWith("data:application/json;base64,")) {
+    try {
+      const json = JSON.parse(atob(tokenURI.split(",")[1]));
+      name = json.name || name;
+      description = json.description || "";
+    } catch (e) {}
+  }
+
+  const skill = skillData as any;
+  const price = skill ? formatEther(skill.price) : "0";
+  const category = skill?.category || "Other";
+  const isListed = skill?.isListed || false;
+  const totalSales = skill ? Number(skill.totalSales) : 0;
+  const isOwner = address && owner && address.toLowerCase() === (owner as string).toLowerCase();
 
   const handleBuy = () => {
     if (!isConnected) {
@@ -55,22 +66,37 @@ export default function SkillDetail() {
       return;
     }
     
+    if (!skill) return;
+    
     writeContract({
       address: BASED_SKILLS_ADDRESS,
       abi: BASED_SKILLS_ABI,
       functionName: "purchaseSkill",
-      args: [MOCK_SKILL.tokenId],
-      value: parseEther(MOCK_SKILL.price),
+      args: [tokenId],
+      value: skill.price,
     });
   };
 
   const getButtonText = () => {
     if (!isConnected) return "Connect Wallet";
+    if (!isListed) return "Not For Sale";
+    if (isOwner) return "You Own This";
     if (isPending) return "Confirm in Wallet...";
     if (isConfirming) return "Processing...";
     if (isSuccess) return "Purchased ✓";
     return "Buy Now";
   };
+
+  if (!skill) {
+    return (
+      <div>
+        <Header />
+        <div className="skill-detail" style={{ justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <p style={{ color: '#666' }}>Loading skill...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -78,51 +104,77 @@ export default function SkillDetail() {
       <div className="skill-detail">
         <div>
           <div className="skill-detail-badge">
-            <span className="skill-category">{MOCK_SKILL.category}</span>
-            {MOCK_SKILL.verified && <span className="skill-verified">✓ Verified</span>}
+            <span className="skill-category">{category}</span>
+            {isListed && <span className="skill-verified">✓ Listed</span>}
           </div>
-          <h1 className="skill-detail-title">{MOCK_SKILL.name}</h1>
-          <p className="skill-detail-description">{MOCK_SKILL.description}</p>
-          <div className="skill-tags">
-            {MOCK_SKILL.tags.map((tag) => (
-              <span key={tag} className="skill-tag">{tag}</span>
-            ))}
-          </div>
-          <pre className="skill-readme">{MOCK_SKILL.longDescription}</pre>
+          <h1 className="skill-detail-title">{name}</h1>
+          <p className="skill-detail-description">{description}</p>
+          
+          {isSuccess && hash && (
+            <div style={{ 
+              padding: '16px', 
+              marginTop: '24px',
+              border: '1px solid #0f0', 
+              background: 'rgba(0,255,0,0.1)' 
+            }}>
+              <p style={{ color: '#0f0', margin: 0 }}>✓ Purchase successful!</p>
+              <a 
+                href={`https://sepolia.basescan.org/tx/${hash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#ff0', fontSize: '12px' }}
+              >
+                View transaction
+              </a>
+            </div>
+          )}
+
+          {error && (
+            <div style={{ 
+              padding: '16px', 
+              marginTop: '24px',
+              border: '1px solid #f00', 
+              background: 'rgba(255,0,0,0.1)' 
+            }}>
+              <p style={{ color: '#f00', margin: 0, fontSize: '12px' }}>
+                {error.message.includes("Cannot buy own") 
+                  ? "You can't buy your own skill" 
+                  : error.message.slice(0, 100)}
+              </p>
+            </div>
+          )}
         </div>
         
         <aside className="skill-detail-sidebar">
           <div className="purchase-card">
             <div className="purchase-price">
-              {MOCK_SKILL.price}<span className="purchase-price-currency"> ETH</span>
+              {price}<span className="purchase-price-currency"> ETH</span>
             </div>
             <button 
               className="purchase-btn" 
               onClick={handleBuy}
-              disabled={isPending || isConfirming}
+              disabled={isPending || isConfirming || !isListed || isOwner}
             >
               {getButtonText()}
             </button>
-            <p className="purchase-note">Instant delivery • Base Sepolia</p>
+            <p className="purchase-note">Base Sepolia Testnet</p>
           </div>
           
           <div className="info-card">
             <h3 className="info-card-title">Info</h3>
             <div className="info-row">
-              <span className="info-label">Creator</span>
-              <span className="info-value">{MOCK_SKILL.creatorName}</span>
+              <span className="info-label">Owner</span>
+              <span className="info-value">
+                {owner ? `${(owner as string).slice(0, 6)}...${(owner as string).slice(-4)}` : "..."}
+              </span>
             </div>
             <div className="info-row">
-              <span className="info-label">Version</span>
-              <span className="info-value">{MOCK_SKILL.version}</span>
+              <span className="info-label">Token ID</span>
+              <span className="info-value">#{id}</span>
             </div>
             <div className="info-row">
-              <span className="info-label">Downloads</span>
-              <span className="info-value">{MOCK_SKILL.downloads}</span>
-            </div>
-            <div className="info-row">
-              <span className="info-label">License</span>
-              <span className="info-value">{MOCK_SKILL.license}</span>
+              <span className="info-label">Sales</span>
+              <span className="info-value">{totalSales}</span>
             </div>
             <div className="info-row">
               <span className="info-label">Contract</span>
@@ -133,7 +185,7 @@ export default function SkillDetail() {
                 className="info-value"
                 style={{ color: '#ff0', textDecoration: 'underline' }}
               >
-                View on Basescan
+                Basescan
               </a>
             </div>
           </div>
