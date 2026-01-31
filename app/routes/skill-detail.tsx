@@ -1,8 +1,9 @@
 import type { MetaFunction } from "react-router";
 import { useParams } from "react-router";
-import { useAccount, useConnect, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useConnect, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseEther } from "viem";
 import { Header } from "../components/Header";
+import { BASED_SKILLS_ADDRESS, BASED_SKILLS_ABI } from "../contracts";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Skill | Based Skills" }];
@@ -10,6 +11,7 @@ export const meta: MetaFunction = () => {
 
 const MOCK_SKILL = {
   id: "1",
+  tokenId: 0n, // コントラクト上のトークンID
   name: "Weather Skill",
   description: "Get current weather and forecasts for any location worldwide. Supports multiple providers.",
   longDescription: `## Overview
@@ -42,19 +44,22 @@ export default function SkillDetail() {
   const { id } = useParams();
   const { isConnected } = useAccount();
   const { connectors, connect } = useConnect();
-  const { sendTransaction, data: hash, isPending } = useSendTransaction();
+  
+  const { writeContract, data: hash, isPending } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const handleBuy = () => {
     if (!isConnected) {
-      // 最初のコネクタで接続
       const connector = connectors[0];
       if (connector) connect({ connector });
       return;
     }
     
-    sendTransaction({
-      to: "0x0000000000000000000000000000000000000000", // TODO: 実際のコントラクトアドレス
+    writeContract({
+      address: BASED_SKILLS_ADDRESS,
+      abi: BASED_SKILLS_ABI,
+      functionName: "purchaseSkill",
+      args: [MOCK_SKILL.tokenId],
       value: parseEther(MOCK_SKILL.price),
     });
   };
@@ -98,7 +103,7 @@ export default function SkillDetail() {
             >
               {getButtonText()}
             </button>
-            <p className="purchase-note">Instant delivery</p>
+            <p className="purchase-note">Instant delivery • Base Sepolia</p>
           </div>
           
           <div className="info-card">
@@ -118,6 +123,18 @@ export default function SkillDetail() {
             <div className="info-row">
               <span className="info-label">License</span>
               <span className="info-value">{MOCK_SKILL.license}</span>
+            </div>
+            <div className="info-row">
+              <span className="info-label">Contract</span>
+              <a 
+                href={`https://sepolia.basescan.org/address/${BASED_SKILLS_ADDRESS}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="info-value"
+                style={{ color: '#ff0', textDecoration: 'underline' }}
+              >
+                View on Basescan
+              </a>
             </div>
           </div>
         </aside>
