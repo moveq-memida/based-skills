@@ -190,18 +190,40 @@ contract BasedSkillsV2 is ERC721, ERC721Royalty, Ownable, ReentrancyGuard {
         if (priceWei == 0) return "FREE";
         
         uint256 whole = priceWei / 1e18;
-        uint256 decimal = (priceWei % 1e18) / 1e14; // 4 decimal places
+        uint256 remainder = priceWei % 1e18;
         
-        if (decimal == 0) {
+        if (remainder == 0) {
             return whole.toString();
         }
         
-        // Remove trailing zeros
-        while (decimal > 0 && decimal % 10 == 0) {
-            decimal /= 10;
+        // Convert to 4 decimal string with leading zeros
+        uint256 decimal4 = remainder / 1e14; // 4 decimal places
+        
+        // Build decimal string with proper leading zeros
+        string memory decStr;
+        if (decimal4 < 10) {
+            decStr = string(abi.encodePacked("000", decimal4.toString()));
+        } else if (decimal4 < 100) {
+            decStr = string(abi.encodePacked("00", decimal4.toString()));
+        } else if (decimal4 < 1000) {
+            decStr = string(abi.encodePacked("0", decimal4.toString()));
+        } else {
+            decStr = decimal4.toString();
         }
         
-        return string(abi.encodePacked(whole.toString(), ".", decimal.toString()));
+        // Remove trailing zeros from decimal string
+        bytes memory decBytes = bytes(decStr);
+        uint256 len = decBytes.length;
+        while (len > 1 && decBytes[len - 1] == '0') {
+            len--;
+        }
+        
+        bytes memory trimmed = new bytes(len);
+        for (uint256 i = 0; i < len; i++) {
+            trimmed[i] = decBytes[i];
+        }
+        
+        return string(abi.encodePacked(whole.toString(), ".", string(trimmed)));
     }
     
     function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721Royalty) returns (bool) {
