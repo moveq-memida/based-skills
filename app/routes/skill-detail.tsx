@@ -40,24 +40,25 @@ export default function SkillDetail() {
     args: [tokenId],
   });
 
-  // Parse metadata
-  let name = `Skill #${id}`;
-  let description = "";
-  
-  if (tokenURI && typeof tokenURI === "string" && tokenURI.startsWith("data:application/json;base64,")) {
-    try {
-      const json = JSON.parse(atob(tokenURI.split(",")[1]));
-      name = json.name || name;
-      description = json.description || "";
-    } catch (e) {}
-  }
-
   const skill = skillData as any;
+  
+  // V2: name and description from skill data directly
+  const name = skill?.name || `Skill #${id}`;
+  const description = skill?.description || "";
   const price = skill ? formatEther(skill.price) : "0";
   const category = skill?.category || "Other";
   const isListed = skill?.isListed || false;
   const totalSales = skill ? Number(skill.totalSales) : 0;
   const isOwner = address && owner && address.toLowerCase() === (owner as string).toLowerCase();
+  
+  // Parse image from tokenURI (on-chain SVG)
+  let imageUrl = "";
+  if (tokenURI && typeof tokenURI === "string" && tokenURI.startsWith("data:application/json;base64,")) {
+    try {
+      const json = JSON.parse(atob(tokenURI.split(",")[1]));
+      imageUrl = json.image || "";
+    } catch (e) {}
+  }
 
   const handleBuy = () => {
     if (!isConnected) {
@@ -109,6 +110,23 @@ export default function SkillDetail() {
           </div>
           <h1 className="skill-detail-title">{name}</h1>
           <p className="skill-detail-description">{description}</p>
+          
+          {imageUrl && (
+            <div style={{ 
+              marginTop: '32px', 
+              marginBottom: '32px',
+              border: '1px solid #333',
+              borderRadius: '8px',
+              overflow: 'hidden',
+              maxWidth: '400px'
+            }}>
+              <img 
+                src={imageUrl} 
+                alt={name}
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
+            </div>
+          )}
           
           {isSuccess && hash && (
             <div style={{ 

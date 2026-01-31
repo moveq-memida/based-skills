@@ -58,30 +58,17 @@ export default function Skills() {
     for (let i = 0; i < tokenIds.length; i++) {
       const skillResult = skillsData[i * 3];
       const ownerResult = skillsData[i * 3 + 1];
-      const tokenURIResult = skillsData[i * 3 + 2];
 
       if (skillResult.status !== "success" || !skillResult.result) continue;
 
       const skill = skillResult.result as any;
       const owner = ownerResult.status === "success" ? ownerResult.result as string : "";
-      const tokenURI = tokenURIResult.status === "success" ? tokenURIResult.result as string : "";
 
-      // Parse metadata from tokenURI if it's a data URI
-      let name = `Skill #${i}`;
-      let description = "";
-      
-      if (tokenURI.startsWith("data:application/json;base64,")) {
-        try {
-          const json = JSON.parse(atob(tokenURI.split(",")[1]));
-          name = json.name || name;
-          description = json.description || "";
-        } catch (e) {}
-      }
-
+      // V2: skill has name and description directly
       parsedSkills.push({
         id: String(i),
-        name,
-        description,
+        name: skill.name || `Skill #${i}`,
+        description: skill.description || "",
         category: skill.category || "Other",
         price: (Number(skill.price) / 1e18).toString(),
         creator: owner.slice(0, 6) + "..." + owner.slice(-4),

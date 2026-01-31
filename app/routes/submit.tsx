@@ -41,28 +41,22 @@ export default function Submit() {
 
     // Generate content hash from skill content
     const contentHash = keccak256(toBytes(formData.skillContent)).slice(0, 50);
-    
-    // Generate token URI (metadata) - simplified for now
-    const metadata = JSON.stringify({
-      name: formData.name,
-      description: formData.description,
-      category: formData.category,
-    });
-    const tokenURI = `data:application/json;base64,${btoa(metadata)}`;
 
     const priceInWei = formData.price ? parseEther(formData.price) : 0n;
     const royaltyBps = Math.floor(parseFloat(formData.royalty) * 100); // 2.5% -> 250
 
+    // V2: createSkill(name, description, category, price, contentHash, royaltyBps)
     writeContract({
       address: BASED_SKILLS_ADDRESS,
       abi: BASED_SKILLS_ABI,
       functionName: "createSkill",
       args: [
-        contentHash,
+        formData.name,
+        formData.description,
         formData.category,
         priceInWei,
+        contentHash,
         royaltyBps,
-        tokenURI,
       ],
     });
   };
